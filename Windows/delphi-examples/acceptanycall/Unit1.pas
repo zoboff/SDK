@@ -17,6 +17,7 @@ type
     procedure TrueConfCallX1InviteReceived(ASender: TObject;
       const eventDetails: WideString);
     procedure TrueConfCallX1XLogin(Sender: TObject);
+    procedure TrueConfCallX1XLoginError(ASender: TObject; errorCode: Integer);
   private
     { Private declarations }
   public
@@ -30,6 +31,8 @@ implementation
 
 {$R *.dfm}
 
+uses LoginForm;
+
 procedure TForm1.TrueConfCallX1InviteReceived(ASender: TObject;
   const eventDetails: WideString);
 begin
@@ -40,7 +43,15 @@ end;
 procedure TForm1.TrueConfCallX1ServerConnected(ASender: TObject;
   const eventDetails: WideString);
 begin
-   TrueConfCallX1.login('********', '*******'); // Write your account data: "user id" and "password"
+  with TfrmLogin.Create(self) do
+  try
+    if ShowModal = mrOk then
+    begin
+      TrueConfCallX1.login(Trim(edID.Text), edPassword.Text);
+    end;
+  finally
+    Free;
+  end;
 end;
 
 procedure TForm1.TrueConfCallX1XAfterStart(Sender: TObject);
@@ -52,6 +63,12 @@ end;
 procedure TForm1.TrueConfCallX1XLogin(Sender: TObject);
 begin
   Shape1.Brush.Color := clGreen; // Just for show
+end;
+
+procedure TForm1.TrueConfCallX1XLoginError(ASender: TObject;
+  errorCode: Integer);
+begin
+  ShowMessage(Format('Login error: %d', [errorCode]));
 end;
 
 end.

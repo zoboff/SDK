@@ -37,6 +37,7 @@ object Form1: TForm1
     OnInviteReceived = TrueConfCallX1InviteReceived
     OnServerConnected = TrueConfCallX1ServerConnected
     OnXLogin = TrueConfCallX1XLogin
+    OnXLoginError = TrueConfCallX1XLoginError
     ExplicitWidth = 481
     ExplicitHeight = 321
     ControlData = {000C0000402A000057290000}
