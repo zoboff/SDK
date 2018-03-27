@@ -41,4 +41,13 @@ object Form1: TForm1
     ExplicitHeight = 321
     ControlData = {000C0000402A000057290000}
   end
+  object btnHardware: TButton
+    Left = 560
+    Top = 96
+    Width = 121
+    Height = 65
+    Caption = 'Hardware'
+    TabOrder = 1
+    OnClick = btnHardwareClick
+  end
 end
