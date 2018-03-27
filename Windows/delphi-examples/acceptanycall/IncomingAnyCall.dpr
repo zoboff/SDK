@@ -3,7 +3,8 @@ program IncomingAnyCall;
 uses
   Vcl.Forms,
   Unit1 in 'Unit1.pas' {Form1},
-  HardwareForm in '..\utils\HardwareForm.pas' {frmHardware};
+  HardwareForm in '..\utils\HardwareForm.pas' {frmHardware},
+  LoginForm in 'LoginForm.pas' {frmLogin};
 
 {$R *.res}
 
