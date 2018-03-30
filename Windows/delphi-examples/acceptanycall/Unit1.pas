@@ -33,7 +33,7 @@ implementation
 
 {$R *.dfm}
 
-uses HardwareForm, LoginForm;
+uses HardwareForm, LoginForm, ServerForm;
 
 procedure TForm1.btnHardwareClick(Sender: TObject);
 begin
@@ -70,6 +70,7 @@ begin
 end;
 
 procedure TForm1.TrueConfCallX1XAfterStart(Sender: TObject);
+var sServer: string;
 begin
   with TfrmHardware.Create(self) do
   try
@@ -82,7 +83,12 @@ begin
   end;
 
   //TrueConfCallX1.XSetCameraByIndex(0); // use your "first" camera
-  TrueConfCallX1.connectToServer(''); // Connect to TrueConf Online cloud service // Otherwise write your server IP address
+
+  { Server }
+  if GetServerName(sServer) then
+    TrueConfCallX1.connectToServer(sServer)
+  else
+    Application.Terminate;
 end;
 
 procedure TForm1.TrueConfCallX1XLogin(Sender: TObject);

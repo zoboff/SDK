@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'Incoming Call Demo Application'
   ClientHeight = 550
   ClientWidth = 689
   Color = clBtnFace

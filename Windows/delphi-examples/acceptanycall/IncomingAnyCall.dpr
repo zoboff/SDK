@@ -4,7 +4,8 @@ uses
   Vcl.Forms,
   Unit1 in 'Unit1.pas' {Form1},
   HardwareForm in '..\utils\HardwareForm.pas' {frmHardware},
-  LoginForm in 'LoginForm.pas' {frmLogin};
+  LoginForm in 'LoginForm.pas' {frmLogin},
+  ServerForm in 'ServerForm.pas' {frmServer};
 
 {$R *.res}
 
