@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'Incoming Call Demo Application'
   ClientHeight = 550
   ClientWidth = 689
   Color = clBtnFace
@@ -37,8 +37,18 @@ object Form1: TForm1
     OnInviteReceived = TrueConfCallX1InviteReceived
     OnServerConnected = TrueConfCallX1ServerConnected
     OnXLogin = TrueConfCallX1XLogin
+    OnXLoginError = TrueConfCallX1XLoginError
     ExplicitWidth = 481
     ExplicitHeight = 321
     ControlData = {000C0000402A000057290000}
+  end
+  object btnHardware: TButton
+    Left = 560
+    Top = 96
+    Width = 121
+    Height = 65
+    Caption = 'Hardware'
+    TabOrder = 1
+    OnClick = btnHardwareClick
   end
 end

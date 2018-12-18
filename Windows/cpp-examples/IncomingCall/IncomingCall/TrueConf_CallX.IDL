@@ -1,0 +1,1581 @@
+﻿// TrueConf_CallX.idl : IDL source for TrueConf_CallX
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (TrueConf_CallX.tlb) and marshalling code.
+
+#include "olectl.h"
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(0C10C07D-A35F-495A-BC37-7EF9FD4D6E66),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface ITrueConfCallX : IDispatch{
+	/**
+	* Execute command in text format
+	* \param cmd - command text
+	*/
+	[id(1), helpstring("Execute script command")] HRESULT XExecuteCommand([in] BSTR cmd);
+
+	/**
+	* Full path to executable used by TrueConf CallX. Initialized from registry by default. Used when executable is started.
+	*/
+	[propget, id(2), helpstring("full path to Trueconf CallX application")] HRESULT CallXPath([out, retval] BSTR* pVal);
+	[propput, id(2), helpstring("full path to Trueconf CallX application")] HRESULT CallXPath([in] BSTR newVal);
+
+	/**
+	* Restarts application window. Sends shutdown command and starts new instance wihtour waitng for answer
+	* \see XRestartForce
+	*/
+	[id(3), helpstring("restart Terminal instance")] HRESULT XRestart();
+
+	/**
+	* Select camera by name
+	* \param cameraName - Camera name
+	* \see Camera
+	* \see XDeselectCamera
+	*/
+	[id(4)] HRESULT XSelectCamera([in] BSTR cameraName);
+
+	/**
+	* Get camera list
+	* \return List of camera names that are present in system. Multilite text separated by "\r\n" newline symbols
+	* \see Camera
+	* \see XGetSpeakerList
+	* \see XGetMicList
+	* \see XSetCameraByIndex
+	* \see XGetCameraCount
+	*/
+	[id(5)] HRESULT XGetCameraList([out, retval] BSTR* cameras);
+
+	/**
+	* Get current camera name
+	* \see XSelectCamera
+	* \see XDeselectCamera
+	* \see XGetCameraList
+	*/
+	[propget, id(6)] HRESULT Camera([out, retval] BSTR* pVal);
+	[propput, id(6)] HRESULT Camera([in] BSTR newVal);
+
+	/**
+	* Do not use camera
+	* \see XSelectCamera
+	* \see Camera
+	*/
+	[id(7)] HRESULT XDeselectCamera();
+
+	/**
+	* Get audio input (microphone) device list
+	* \return List of audio input device names that are present in system. Multilite text separated by "\r\n" newline symbols
+	* \see Microphone
+	* \see XGetSpeakerList
+	* \see XGetCameraList
+	*/
+	[id(8)] HRESULT XGetMicList([out, retval] BSTR* microphones);
+
+	/**
+	* Get audio output input (speaker) device list
+	* \return List of audio output device names that are present in system. Multilite text separated by "\r\n" newline symbols
+	* \see Speaker
+	* \see XGetCameraList
+	* \see XGetMicList
+	*/
+	[id(9)] HRESULT XGetSpeakerList([out, retval] BSTR* speakers);
+
+	/**
+	* Get audio input (microphone) device name
+	*/
+	[propget, id(10)] HRESULT Microphone([out, retval] BSTR* pVal);
+	[propput, id(10)] HRESULT Microphone([in] BSTR newVal);
+
+	/**
+	* Get audio output (speaker) device name
+	*/
+	[propget, id(11)] HRESULT Speaker([out, retval] BSTR* pVal);
+	[propput, id(11)] HRESULT Speaker([in] BSTR newVal);
+
+	/**
+	* Do not use audio input (microphone)
+	* \see Microphone
+	*/
+	[id(12)] HRESULT XDeselectMic();
+
+	/**
+	* Do not use audio output (speaker)
+	* \see Speaker
+	*/
+	[id(13)] HRESULT XDeselectSpeaker();
+
+	/**
+	* Terminate conference for all participants. Moderator rights for current conference are required
+	* \see hangUp
+	* \see hangUp2
+	*/
+	[id(14)] HRESULT XHangUpForAll();
+
+	/**
+	* Set background image for main component window 
+	* \param imgPath - full path to image file
+	*/
+	[id(15)] HRESULT XSetBackgroundImage([in] BSTR imgPath);
+
+	/**
+	* Check if event exists
+	* Helper function that can check which event was triggered in OnXNotify 
+	* \param notificationData - data passed in OnXNotify
+	* \param eventName - event name
+	* \return returns true, if eventName exists in notificationData
+	*/
+	[id(16), helpstring("Check event-specification of notification data")] HRESULT XCheckForEvent([in] BSTR notificationData, [in] BSTR eventName, [out, retval] VARIANT_BOOL* eventDetected);
+	
+	/**
+	* Initiates picture broadcast in place of video from camera.  
+	* \param imgPath - Full path of image file
+	* \see XStopBroadcastPicture
+	*/
+	[id(17)] HRESULT XStartPictureBroadcast([in] BSTR imgPath);
+
+	/**
+	* Stop picture broadcast, send video from camera
+	* \see XStartBroadcastPicture
+	*/
+	[id(18)] HRESULT XStopPictureBroadcast();
+
+	/**
+	* Accept incoming call. 
+	* Could be executed only when incoming call or group conference invite is in process, ignored otherwise
+	* \see acceptPeer
+	*/
+	[id(19)] HRESULT accept();
+
+	/**
+	* Allow user to join your group conference.
+	* Could be executed only when incoming request for joining conference is in process, ignored otherwise.
+        * Moderator rights for current conference are required.
+	* \param peerId - TrueConf ID of user
+	* \see accept
+	*/
+	[id(20)] HRESULT acceptPeer([in] BSTR peerId);
+
+	/**
+	* Accept invitation to take podium.
+	* Could be executed only when incoming request for taking podium is in process, ignored otherwise. 
+	*/
+	[id(21)] HRESULT acceptPodiumInvite();
+
+	/**
+	* Allow user to take podium.
+	* Could be executed only when incoming request from user for taking podium is in process, ignored otherwise. 
+        * Moderator rights for current conference are required.
+	*/
+	[id(22)] HRESULT acceptPodiumRequest();
+
+	/**
+	* Activate license key
+	* \param licenseKey - license key
+	*/
+	[id(23)] HRESULT activateLicense([in] BSTR licenseKey);
+
+	/**
+	* Add contact to user address book
+	* \param callId - TrueConf ID of user to add
+	* \param displayName - Display Name of added user
+	*/
+	[id(24)] HRESULT addContactToAbook([in] BSTR callId, [in] BSTR displayName);
+
+	/**
+	* Allow your video/audio stream recording
+	* Could be executed only when incoming request on stream recording is in process, ignored otherwise. 
+	* \see denyRecord
+	*/
+	[id(25)] HRESULT allowRecord();
+
+	/**
+	* Start application update
+	* After successful update conference will be restarted
+	*/
+	[id(26)] HRESULT appUpdate();
+
+	/**
+	* Call user or join the conference by CID. This command starts p2p call or joins the conference.
+	* This command starts p2p call.
+	* \param peerId - user TrueConf ID or alias, or other supported ID types (H323, SIP, RTSP) in correct format, or conference CID in correct format (\c\[conference name]@[server name]#vcs).
+	* \see reject
+	*/
+	[id(27)] HRESULT call([in] BSTR peerId);
+
+	/**
+	* Set videomatrix type and peer plasec
+	* Command is available in group conference, ignored otherwise
+	* \param jsonMatrix - videomatrix data in JSON format {	"matrixType" : 1,	"participants" : [	{	"slotId" : 1,	"peerId" : "jonh@trueconf.com"	},	{	"slotId" : 2,	"peerId" : "ivan@trueconf.com"	},	{	"slotId" : 3,	"participant" : "lee@trueconf.com"	}	]	}
+	*/
+	[id(28)] HRESULT changeVideoMatrix([in] BSTR jsonMatrix);
+
+	/**
+	* Connect to server
+	* \param serverStr - specify server IP address or DNS name in format server.name[:port], for example "video.company.com:4307"
+	* - port number is optional, default port number 4307 is used if omitted
+	* - use empty string to connect to TrueConf Online cloud
+        * - use @domain.name to connect to other cloud
+	* \see OnServerConnected
+	* \see OnServerDisconnected
+	*/
+	[id(29)] HRESULT connectToServer([in] BSTR serverStr);
+
+	/**
+	* Create conference with specific parametes
+	* \param confName - conference name
+	* \param type - Conference type. One of
+    * - "symmetric" 
+    * - "asymmetric"
+    * - "role"
+	* \param autoAccept - allow users to join automatically
+	* \param users - user ID list to invite. TrueConf ID and H323,SIP, RTSP ID's could be used in special format
+	*/
+	[id(30)] HRESULT createConference([in] BSTR confName, [in] BSTR type, [in] VARIANT_BOOL autoAccept, [in] BSTR users);
+	
+	/**
+	* Deny recording request of your stream
+	* Could be executed only when incoming request on stream recording is in process, ignored otherwise. 
+	*/
+	[id(31)] HRESULT forbidRecord();
+
+	/**
+	* 
+	*/
+	[id(32)] HRESULT extendUidTtl();
+
+
+	/**
+	* Send address book request to server
+	*/
+	[id(33)] HRESULT getAbook();
+
+	/**
+	* Get application state
+	*/
+	[id(34)] HRESULT getAppState();
+
+	/**
+	* Get audio mute state
+	*/
+	[id(35)] HRESULT getAudioMute();
+
+	/**
+	* 
+	*/
+	[id(36)] HRESULT getSelfieBroadcast();
+
+	/**
+	* Get user display name from TrueConf ID. 
+	* \param peerId - user's TrueConf ID 
+	*/
+	[id(37)] HRESULT getDisplayNameById([in] BSTR peerId);
+
+	/**
+	* Get conference participants list
+	*/
+    [id(38)] HRESULT getParticipantsList([out, retval] BSTR* returnJson);
+
+	/**
+	* Get detailed user information
+	* \param peerId - user's TrueConf ID
+	*/
+	[id(39)] HRESULT getContactDetails([in] BSTR peerId);
+
+	/**
+	* Get hardware list
+	*/
+	[id(40)] HRESULT getHardware();
+
+	/**
+	* Get unique hardware key for license generation
+	*/
+	[id(41)] HRESULT getHardwareKey();
+
+	/**
+	* Get maximum conference title length
+	*/
+	[id(42)] HRESULT getMaxConfTitleLength();
+
+	/**
+	* Get audio input mute information
+	*/
+	[id(43)] HRESULT getMicMute();
+
+	/**
+	* Get system screen infromation
+	*/
+	[id(44)] HRESULT getMonitorsInfo();
+
+	/**
+	* Get list of all users requesting to enter conference 
+	*/
+	[id(45)] HRESULT getIdListRequestInvite();
+
+	/**
+	* Get modes and pins for current camera device
+	*/
+	[id(46)] HRESULT getModes();
+
+	/**
+	* Get settings
+	*/
+	[id(47)] HRESULT getSettings();
+
+	/**
+	* Get system information
+	*/
+	[id(48)] HRESULT getSystemInfo();
+
+	/**
+	* Get video matirx information
+	*/
+	[id(49)] HRESULT getVideoMatrix();
+
+	/**
+	* Get video mute state
+	*/
+	[id(50)] HRESULT getVideoMute();
+
+	/**
+	* Get current license information
+	*/
+	[id(51)] HRESULT getLicenseType();
+
+	/**
+	* Send request to take podium.
+	* Moderators take podium automatically
+	* \see onRoleEventOccurred
+	*/
+	[id(52)] HRESULT gotoPodium();
+
+	/**
+	* Leave conference
+	* Could be executed only when incoming request on stream recording is in process, ignored otherwise. 
+	* \see hangUp2
+	* \see XHangUpForAll
+	*/
+	[id(53)] HRESULT hangUp();
+
+	/**
+	* Leave or terminate conference
+	* Could be executed only when incoming request on stream recording is in process, ignored otherwise. 
+	* \param forAll - leave or terminate
+	* - true - terminate conference for all. Requires moderator rights.
+	* - false - leave conference
+	* \see hangUp
+	* \see XHangUpForAll
+	*/
+	[id(54)] HRESULT hangUp2([in] VARIANT_BOOL forAll);
+
+	/**
+	* Invite user to conference.
+	* Requires moderator rights.
+	* Could be executed only when incoming request on stream recording is in process, ignored otherwise. 
+	* \param peerId - user ID
+	*/
+	[id(55)] HRESULT inviteToConference([in] BSTR peerId);
+
+	/**
+	* Invite user to podium.
+	* Command is valid for role-based conference only.
+	* Requires moderator rights.
+	* Could be executed only when incoming request on stream recording is in process, ignored otherwise. 
+	* \param peerId - user ID
+	*/
+	[id(56)] HRESULT inviteToPodium([in] BSTR peerId);
+
+	/**
+	* Remove user from podium.
+	* Command is valid for role-based conference only.
+	* Requires moderator rights.
+	* Could be executed only when incoming request on stream recording is in process, ignored otherwise. 
+	* \param peerId - user ID
+	*/
+	[id(57)] HRESULT removeFromPodium([in] BSTR peerId);
+
+	/**
+	* Remove user from conference.
+	* Requires moderator rights.
+	* Could be executed only when incoming request on stream recording is in process, ignored otherwise. 
+	* \param peerId - user ID
+	*/
+	[id(58)] HRESULT removePeer([in] BSTR peerId);
+
+	/**
+	* Leave podium.
+	* Command is valid for role-based conference only.
+	* Could be executed only when incoming request on stream recording is in process, ignored otherwise. 
+	*/
+	[id(59)] HRESULT leavePodium();
+
+	/**
+	* Authorize on server
+	* \param login - User ID
+	* \param password - Use password
+	* \see logout
+	*/
+	[id(60)] HRESULT login([in] BSTR login, [in] BSTR password);
+
+	/**
+	* Deauthorize from server
+	* \see login
+	*/
+	[id(61)] HRESULT logout();
+
+	/**
+	* Turn camera right. Use ptzStop command to stop the operation.
+	* PTZ camera control
+	*/
+	[id(62)] HRESULT ptzRight();
+
+	/**
+	* Turn camera left. Use ptzStop command to stop the operation.
+	* PTZ camera control
+	*/
+	[id(63)] HRESULT ptzLeft();
+
+	/**
+	* Turn camera up. Use ptzStop command to stop the operation.
+	* PTZ camera control
+	*/
+	[id(64)] HRESULT ptzUp();
+
+	/**
+	* Turn camera down. Use ptzStop command to stop the operation.
+	* PTZ camera control
+	*/
+	[id(65)] HRESULT ptzDown();
+
+	/**
+	* Increase camera zoom. Use ptzStop command to stop the operation.
+	* PTZ camera control
+	*/
+	[id(66)] HRESULT ptzZoomIn();
+
+	/**
+	* Decrease camera zoom. Use ptzStop command to stop the operation.
+	* PTZ camera control
+	*/
+	[id(67)] HRESULT ptzZoomOut();
+
+	/**
+	* reject incoming call or conference invite
+	* Command could be executed onlye when request is in process/
+	* \see accept
+	*/
+	[id(68)] HRESULT reject();
+
+	/**
+	* reject request to join conference
+	* \param peerId - User ID
+	*/
+	[id(69)] HRESULT rejectPeer([in] BSTR peerId);
+
+	/**
+	* reject invitation to take podium
+	*/
+	[id(70)] HRESULT rejectInvitationToPodium();
+
+	/**
+	* reject request to take podium
+	*/
+	[id(71)] HRESULT rejectRequestToPodium();
+
+	/**
+	* Remove user from address book
+	* \param callId - User ID
+	*/
+	[id(72)] HRESULT removeContactFromAbook([in] BSTR callId);
+
+	/**
+	* Mute/unmute audio output
+	*/
+	[id(73)] HRESULT setAudioMute([in] VARIANT_BOOL mute);
+
+	//[id(74)] HRESULT setAuthParams([in] BSTR paramsInJSON);
+
+	/**
+	* 
+	*/
+	[id(75)] HRESULT setSelfieBroadcast([in] BSTR paramsInJSON);
+
+	/**
+	* Set current hardware
+	*/
+	[id(76)] HRESULT setHardware([in] BSTR hardwareInJson);
+
+	/**
+	* Select audio input mute state
+	*/
+	[id(77)] HRESULT setMicMute([in] VARIANT_BOOL mute);
+
+	/**
+	* Set mode and pin of current camera device
+	*/
+	[id(78)] HRESULT setModes([in] BSTR pin, [in] BSTR mode);
+
+	/**
+	* Set application settings
+	*/
+	[id(79)] HRESULT setSettings([in] BSTR settingsInJson);
+
+	/**
+	* Mute/unmute video
+	*/
+	[id(80)] HRESULT setVideoMute([in] VARIANT_BOOL mute);
+
+	/**
+	* Shutdown application
+	*/
+	[id(81)] HRESULT shutdown();
+
+	/**
+	* Shutdown application with options
+	* \param forAll - if true, terminates conference for all users
+	*/
+	[id(82)] HRESULT shutdown2([in] VARIANT_BOOL forAll);
+
+	/**
+	* Start screen or application sharing
+	* \param id - screen or window handle
+	*/
+	[id(83)] HRESULT startScreenCapture([in] BSTR id);
+
+	/**
+	* Start remark. 
+	* Available in role-based conference only.
+	* Fails if other user remark is in process.
+	* After positive reponse 5 seconds coundown starts
+	* onRemarkCountDown will be called each second
+	* \see onRemarkCountDown
+	*/
+	[id(84)] HRESULT startAudioRemark();
+
+	/**
+	* Stop screen or application sharing.
+	*/
+	[id(85)] HRESULT stopScreenCapture();
+
+	/**
+	* Select camera by index
+	* \param cameraIdx - camera index in list
+	*
+	* - camera will be set to none if camera with such index does not exist
+	* - cameraIdx >= 0.
+	*/
+	[id(86)] HRESULT XSetCameraByIndex([in] LONG cameraIdx);
+
+
+	/**
+	* Returns camera name by index
+	* \param cameraIdx - camera index in list
+	* camera indexes start from 0.
+	*/
+	[id(87)] HRESULT XGetCameraByIndex([in] LONG cameraIdx, [out, retval] BSTR* cameraName);
+
+	/**
+	* Returns number of cameras in system
+	*/
+	[id(88)] HRESULT XGetCameraCount([out, retval] LONG* camerasCount);
+
+	/**
+	* Select audio input device by index
+	* \param micIdx - audio input device index in list
+	* 
+	* - audio input will be set to none if audio input with such index does not exist
+	* - indexes start from 0.
+	* \see Microphone
+	*/
+	[id(89)] HRESULT XSelectMicByIndex([in] LONG microphoneIdx);
+
+	/**
+	* Select audio output device by index
+	* \param speakerIdx -  audio output device index in list
+	* - audio output will be set to none if audio output with such index does not exist
+	* - indexes start from 0.
+	* \see Speaker
+	*/
+	[id(90)] HRESULT XSelectSpeakerByIndex([in] LONG speakerIdx);
+
+	/**
+	* Get audio input name by index
+	* \param micIdx - audio input device index in list
+	* \see Microphone
+	*/
+	[id(91)] HRESULT XGetMicByIndex([in] LONG microphoneIdx, [out, retval] BSTR* microphoneName);
+
+	/**
+	* Get audio output name by index
+	* \param speakerIdx -  audio output device index in list
+	* \see Speaker
+	*/
+	[id(92)] HRESULT XGetSpeakerByIndex([in] LONG speakerIdx, [out, retval] BSTR* speakerName);
+
+	/**
+	* Get audio input devices count in system
+	* \see Microphone
+	*/
+	[id(93)] HRESULT XGetMicCount([out, retval] LONG* microphonesCount);
+
+	/**
+	* Get audio output devices count in system
+	* \see Speaker
+	*/
+	[id(94)] HRESULT XGetSpeakerCount([out, retval] LONG* speakersCount);
+
+
+	/**
+	* Adds slide to slideshow
+	* \param imgPath - full image path
+	*/
+	[id(95)] HRESULT XAddSlide([in] BSTR imgPath);
+
+	/**
+	* Deletes slide from slideshow
+	* \param imgIdx - slide index in list
+	*/
+	[id(96)] HRESULT XRemoveSlide([in] LONG imgIdx);
+
+	/**
+	* Starts slideshow. Slides should be uploaded prevoiusly
+	* \param slideShowName - Slideshow name, could be empty
+	* \see stopSlideShow
+	*/
+	[id(97)] HRESULT startSlideShow([in] BSTR slideShowName);
+
+	/**
+	* Show slide by index
+	* Command could be executed only in process of slideshow
+	*/
+	[id(98)] HRESULT showSlide([in] LONG slideIdx);
+
+	/**
+	* Show next slide
+	* Command could be executed only in process of slideshow
+	*/
+	[id(99)] HRESULT nextSlide();
+
+	/**
+	* Show previous slide
+	* Command could be executed only in process of slideshow
+	*/
+	[id(100)] HRESULT prevSlide();
+
+	/**
+	* Show first slide
+	* Command could be executed only in process of slideshow
+	*/
+	[id(101)] HRESULT firstSlide();
+
+	/**
+	* Show last slide
+	* Command could be executed only in process of slideshow
+	*/
+	[id(102)] HRESULT lastSlide();
+
+	/**
+	* Move slide up in list
+	* Command could be executed only in process of slideshow
+	* \param slideIdx - slide index to move
+	*/
+	[id(103)] HRESULT moveSlideUp([in] LONG slideIdx);
+
+	/**
+	* Move slide down in list
+	* Command could be executed only in process of slideshow
+	* \param slideIdx - slide index to move
+	*/
+	[id(104)] HRESULT moveSlideDown([in] LONG slideIdx);
+
+	/**
+	* Stop slideshow
+	* Command could be executed only in process of slideshow
+	* \see startSlideShow
+	*/
+	[id(105)] HRESULT stopSlideShow();
+
+	/**
+	* Get slideshow information
+	*/
+	[id(106)] HRESULT getSlideShowInfo();
+
+
+	/**
+	* Request video/content stream switch
+	* \param peerId - user ID
+	* \param mainCamera - content flag
+	* true - main stream
+	* false - content stream
+	*/
+	[id(107)] HRESULT switchVideoStream([in] BSTR peerId, [in] VARIANT_BOOL mainCamera);
+
+	/**
+	* Open slide select dialog for slideshow
+	* \return returns 0 if ok or error code
+	*/
+	[id(108)] HRESULT XAddSlidesDialog([out, retval] ULONG* errorCode);
+
+	/**
+	* Set adiitional application command line options
+	*/
+	[propget, id(109)] HRESULT XCommandLine([out, retval] BSTR* pVal);
+	[propput, id(109)] HRESULT XCommandLine([in] BSTR newVal);
+
+	/**
+	* Restart terminal options
+	*/
+	[id(110)] HRESULT XForceRestart();
+
+    /**
+    * Get CallX window handle
+    * \return returns window handle, positive value, can be used for screen shot making
+    */
+    [id(111)] HRESULT XGetHandle([out, retval] ULONG* handle);
+
+    /**
+    * take screen shot of the callx
+    * \param outputFileName - file name for screen shot output file
+    */
+    [id(112)] HRESULT takePicture([in] BSTR outputFileName);
+
+    /**
+    * 
+    * Stop camera rotation and zoom.
+    */
+    [id(113)] HRESULT ptzStop();
+
+    /**
+    * 
+    * Send file
+    */
+    [id(114)] HRESULT XFileSend([in] BSTR peerId, [in] BSTR filePath, [in] BSTR fileCaption, [out, retval] LONG* resId);
+
+    /**
+    * 
+    * Start file transfer
+    */
+    [id(115)] HRESULT XFileAccept([in] LONG fileId, [out, retval] VARIANT_BOOL* success);
+
+    /**
+    * Check if file transfer is available
+    */
+    [id(116)] HRESULT XFileTransferAvailable([out, retval] VARIANT_BOOL* available);
+
+    /**
+    * Get file transfer progress and statistics
+    */
+    [id(117)] HRESULT XFileStatsInfo([in] LONG fileId, [out] LONG* size, [out] LONG* downloaded, [out] LONG* uploaded, [out] LONG* u_speed, [out] LONG* d_speed, [out] LONG* peers, [out, retval] VARIANT_BOOL* success);
+
+    /**
+    * Cancel file transfer
+    */
+    [id(118)] HRESULT XFileSendAbort([in] LONG fileId, [out, retval] VARIANT_BOOL* success);
+
+    /**
+    * Reject file transfer request
+    */
+    [id(119)] HRESULT XFileReject([in] LONG fileId, [out, retval] VARIANT_BOOL* success);
+
+    /**
+    * Get file status (if id != 0)
+    * or get common file transfer information (id == 0)
+    * \param id - file id or 0 for common information
+    * \result - file transfer status
+    * - 1 - start error
+    * - 2 - started
+    * - 3 - complete
+    * - 4 - undefined error while sending
+    * - 5 - pending
+    * - 0 - if id != 0 - id not found
+    * - 0 - if id == 0 - no files in queue
+    * - 255 -there are  files in queue (только если id == 0)
+    * - -1 - file transfer not available
+    * - -2 - unknown error
+    */
+    [id(120)] HRESULT XGetFileSendStatus([in] LONG id, [out, retval] LONG* result);
+
+    /**
+    * Delete file uploaded before
+    * \param fileID - file id , use 0 to delete all files
+    */
+    [id(121)] HRESULT XFileDelete([in] LONG fileID, [out, retval] VARIANT_BOOL* success);
+
+    /**
+    * (TODO translate)
+    * get hash by file id
+    */
+    [id(122)] HRESULT XGetFileHashById([in] LONG fileID, [out, retval] BSTR* hash);
+
+    /**
+    * (TODO translate)
+    * get file id by hash
+    */
+    [id(123)] HRESULT XGetFileIdByHash([in] BSTR hash, [out, retval] LONG* fileID);
+
+    /**
+    * (TODO translate)
+    * get full path of downloaded file
+    */
+    [id(124)] HRESULT XGetFileDownloadPath([in] LONG fileID, [out, retval] BSTR* filePath);
+
+    /**
+    * Get list of all files in FileTransfer
+    * Each list item contains the following information
+    * \param id - file id
+    * \param isForSent - file transfer direction: true - sending, false - receiving
+    * \param fileName - file name, name without path while receiving, full path while sending
+    * \param caption - file caption
+    * \param peerId - peerId of sender
+    * \param downloadDir - folder for file download (while receiving)
+    * \param hash - file hash
+    */
+    [id(125)] HRESULT XGetFileTransferList([out, retval] BSTR* files);
+
+    /**
+    * send command to a user, the user will receive onCommandReceived event
+    */
+    [id(126)] HRESULT sendCommand([in] BSTR peerId, [in] BSTR cmd);
+
+    /**
+    * Print file on conference party side, file should be previously uploaded by party. 
+    */
+	[id(127)] HRESULT XRemotePrintPdf([in] BSTR peerId, [in] LONG fileId, [out, retval] LONG* retCode);
+
+    /**
+    * Print local file
+    */
+    [id(128)] HRESULT XPrintPdf([in] BSTR filePath, [out, retval] LONG* retCode);
+
+    /**
+    * Get CallX process ID
+    */
+    [id(129)] HRESULT XGetCallXProcessId([out, retval] LONG* pid);
+
+    /**
+    * Send file to all group conference participants
+    * \param filePath - full file path
+    * \param fileCaption - file name
+    * \result file ID
+    */
+    [id(130)] HRESULT XFileSendToConference([in] BSTR filePath, [in] BSTR fileCaption, [out, retval] LONG* resId);
+
+    /**
+    * Add user to address book
+    * \param peerId - user ID
+    * \param displayName - user display name
+    * \result json string with return result
+    */
+    [id(131)] HRESULT addToAbook([in] BSTR peerId, [in] BSTR displayName, [out, retval] BSTR* result);
+
+    /**
+    * Rename user in address book
+    * \param peerId - user ID
+    * \param newDisplayName - new user's display name
+    * \result json строка с результатом выполнения
+    */
+    [id(132)] HRESULT renameInAbook([in] BSTR peerId, [in] BSTR newDisplayName, [out, retval] BSTR* result);
+
+    /**
+    * Delete user from address book
+    * \param peerId - user ID
+    * \result json string with return result
+    */
+    [id(133)] HRESULT removeFromAbook([in] BSTR peerId, [out, retval] BSTR* result);
+
+    /**
+    * Ban user
+    * \param peerId - user ID
+    * \result json string with return result
+    */
+    [id(134)] HRESULT block([in] BSTR peerId, [out, retval] BSTR* result);
+
+    /**
+    * Unban user
+    * \param peerId - user ID
+    * \result json string with return result
+    */
+    [id(135)] HRESULT unblock([in] BSTR peerId, [out, retval] BSTR* result);
+
+    /**
+    * Get ban list
+    * \result json string with return result
+    */
+    [id(136)] HRESULT getBanList([out, retval] BSTR* result);
+
+    /**
+    * Create group
+    * \param name - group name
+    * \result json string with return result
+    */
+    [id(138)] HRESULT createGroup([in] BSTR name, [out, retval] BSTR* result);
+
+    /**
+    * Delete group
+    * \param groupId - group ID
+    * \result json string with return result
+    */
+    [id(139)] HRESULT removeGroup([in] LONG groupId, [out, retval] BSTR* result);
+
+    /**
+    * Rename group
+    * \param groupId - group ID
+    * \param newGroupName - new group name
+    * \result json string with return result
+    */
+    [id(140)] HRESULT renameGroup([in] LONG groupId, [in] BSTR newGroupName, [out, retval] BSTR* result);
+
+    /**
+    * Add user to group
+    * \param groupId - group ID
+    * \param peerId - user ID
+    * \result json string with return result
+    */
+    [id(141)] HRESULT addToGroup([in] LONG groupId, [in] BSTR peerId, [out, retval] BSTR* result);
+
+    /**
+    * Remove user from group
+    * \param groupId - group ID
+    * \param peerId - user ID
+    * \result json string with return result
+    */
+    [id(142)] HRESULT removeFromGroup([in] LONG groupId, [in] BSTR peerId, [out, retval] BSTR* result);
+
+    /**
+    * Get group information
+    * \result json string with return result
+    */
+    [id(143)] HRESULT getGroups([out, retval] BSTR* result);
+
+    /**
+    * Starts audio playback test
+    * \result json string with return result
+    */
+    [id(144)] HRESULT testAudioRenderer([out, retval] BSTR* result);
+
+    /**
+    * Starts audio capture test
+    * \result json string with return result
+    */
+    [id(145)] HRESULT testAudioCapturerStart([out, retval] BSTR* result);
+
+    /**
+    * Stops audio capture test
+    * \result json string with return result
+    */
+    [id(146)] HRESULT testAudioCapturerStop([out, retval] BSTR* result);
+
+    /**
+    * Send DTMF dial tones in video call
+    * \param symbol - tone to send
+    * \result json string with return result
+    */
+    [id(147)] HRESULT toneDial([in] BSTR symbol, [out, retval] BSTR* result);
+
+    /**
+    * Send message to user
+    * \param peerId - user ID
+    * \param message - message
+    * \result json string with return result
+    */
+    [id(148)] HRESULT sendMessage([in] BSTR peerId, [in] BSTR message, [out, retval] BSTR* result);
+
+    /**
+    * Send message to current group conference
+    * \param message - message
+    * \result json string with return result
+    */
+    [id(149)] HRESULT sendGroupMessage([in] BSTR message, [out, retval] BSTR* result);
+
+    /**
+    * Clear chat history
+    * \param chatId - chat ID,  peerId of party for pesonal chats or group conference ID
+    * \result json string with return result
+    */
+    [id(150)] HRESULT chatClear([in] BSTR chatId, [out, retval] BSTR* result);
+
+    /**
+    * Get chat list
+    * \result json string with chat list
+    */
+    [id(151)] HRESULT getListOfChats([out, retval] BSTR* result);
+
+    /**
+    * Get latest chat messages
+    * \param chatId - chat ID,  peerId of party for pesonal chats or group conference ID
+    * \param count - message count
+    * \result json string with return result and message list
+    */
+    [id(152)] HRESULT getChatLastMessages([in] BSTR chatId, [in] LONG count, [out, retval] BSTR* result);
+
+    /**
+    * (TODO translate)
+    * get call history list
+    * \param count - requested calls count, it should be more than one 
+    * return json string that contains call history list
+    * \see OnCallHistoryUpdated
+    */
+    [id(153)] HRESULT getCallHistory([in] LONG count, [out, retval] BSTR* result);
+
+    /**
+    * (TODO translate)
+    * mark all calls in call history as "viewed", update lastView parameter (see OnCallHistoryUpdated)
+    * return json string with the result of the command execution
+    * \see OnCallHistoryUpdated
+    */
+    [id(154)] HRESULT setLastCallsViewed([out, retval] BSTR* result);
+    
+
+};
+[
+	uuid(B5D60CBD-E7F7-4D70-959B-BD14068436A5),
+	version(1.0)
+]
+library TrueConf_CallXLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(0018D12A-35E1-4811-85DC-197D54EB3291)
+	]
+	dispinterface _ITrueConfCallXEvents
+	{
+		properties:
+		methods:
+
+			/**
+			* Component event handler
+			* \param data - event data in JSON
+			*/
+			[id(1)] void OnXNotify([in] BSTR data);
+
+			/**
+			* Nonitifacton about full CallX initialization
+			*/
+			[id(2)] void OnXAfterStart();
+
+			/**
+			* State change notification
+			* \param prevState - previous state
+			* \param newState - new state
+			* 
+			*   prevState and newState could have the following values
+			* - 0 none, no server connection and application does not try to connect to server 
+			* - 1 connect, application tries to connect to server 
+			* - 2 login, login required
+			* - 3 normal, application connected and logged in
+			* - 4 wait, incoming or outgoing call establishment in progress
+			* - 5 conference, application is in call
+			* - 6 close, call is terminating
+			*/
+			[id(3)] void OnXChangeState([in] LONG prevState, [in] LONG newState);
+
+			/**
+			* Termination notification
+			* in this state application could be restartes with XRestart or XRestartForce commands
+			*/
+			[id(4)] void OnXTerminate();
+
+			/**
+			* Failed start notification
+			* 
+			* Possible reasons
+			* - wrong CallXPath; 
+			* - application stopped functioning before full start (OnXAfterStart).
+			*/
+			[id(5)] void OnXStartFail();
+
+			/**
+			* Address book update notification
+			* \param eventDetails - event details in JSON format
+			*/
+			[id(6)] void OnAbookUpdate([in] BSTR eventDetails);
+
+			/**
+			* Applicaton update available notification
+			*/
+			[id(7)] void OnAppUpdateAvailable([in] BSTR eventDetails);
+
+			//[id(8)] void OnAuthorizationNeeded([in] BSTR eventDetails);
+
+			/**
+			* Video matrix change notification
+			*/
+			[id(9)] void OnChangeVideoMatrixReport([in] BSTR eventDetails);
+
+			/**
+			* Call start notification
+			*/
+			[id(10)] void OnConferenceCreated([in] BSTR eventDetails);
+
+			/**
+			* Call end notification
+			*/
+			[id(11)] void OnConferenceDeleted([in] BSTR eventDetails);
+
+			/**
+			* Ban notification
+			*/
+			[id(12)] void OnContactBlocked([in] BSTR eventDetails);
+
+			/**
+			* Delete from address book notification
+			*/
+			[id(13)] void OnContactDeleted([in] BSTR eventDetails);
+
+			/**
+			* Unban notification
+			*/
+			[id(14)] void OnContactUnblocked([in] BSTR eventDetails);
+
+			/**
+			* Hardware change notification
+			*/
+			[id(15)] void OnHardwareChanged([in] BSTR eventDetails);
+
+			/**
+			* User detailed info arrival notification
+			*/
+			[id(16)] void OnDetailInfo([in] BSTR eventDetails);
+
+			/**
+			* Video pin and mode infrmaton arrival notfication
+			*/
+			[id(17)] void OnDeviceModesDone([in] BSTR eventDetails);
+
+			/**
+			* Invite notifiction  
+			*/
+			[id(18)] void OnInviteReceived([in] BSTR eventDetails);
+
+			/**
+			* Podium request reply notification
+			*/
+			[id(19)] void OnIncomingRequestToPodiumAnswered([in] BSTR eventDetails);
+
+			/**
+			* Invite request sent notification
+			*/
+			[id(20)] void OnInviteRequestSent([in] BSTR eventDetails);
+
+			/**
+			* Invite sent notificaton
+			*/
+			[id(21)] void OnInviteSent([in] BSTR eventDetails);
+
+			/**
+			* Login notification
+			*/
+			[id(22)] void OnLogin([in] BSTR eventDetails);
+
+			/**
+			* Logout notification
+			*/
+			[id(23)] void OnLogout([in] BSTR eventDetails);
+
+			/**
+			* Receiver information update notification
+			*/
+			[id(24)] void OnReceiversInfoUpdated([in] BSTR eventDetails);
+
+			/**
+			* Record request notificaton
+			*/
+			[id(25)] void OnRecordRequest([in] BSTR eventDetails);
+
+			/**
+			* Record request reply notificaton
+			*/
+			[id(26)] void OnRecordRequestReply([in] BSTR eventDetails);
+
+			/**
+			* Reject notification
+			*/
+			[id(27)] void OnRejectReceived([in] BSTR eventDetails);
+			
+			/**
+			* Reject sent notificaton
+			*/
+			[id(28)] void OnRejectSent([in] BSTR eventDetails);
+			
+			/**
+			* Remark countdown notification
+			*/
+			[id(29)] void OnRemarkCountDown([in] BSTR eventDetails);
+			
+			/**
+			* Request to join to your group conference notification
+			*/
+			[id(30)] void OnRequestInviteReceived([in] BSTR eventDetails);
+
+			/**
+			* Role change in conference user list notification
+			*/
+			[id(31)] void OnRoleChanged([in] BSTR eventDetails);
+
+			/**
+			* Slideshow information update notificaton
+			*/
+			[id(32)] void OnSelfSSInfoUpdate([in] BSTR eventDetails);
+
+			/**
+			* Connect to server notification
+			*/
+			[id(33)] void OnServerConnected([in] BSTR eventDetails);
+
+			/**
+			* Disconnect from server notification
+			*/
+			[id(34)] void OnServerDisconnected([in] BSTR eventDetails);
+
+			/**
+			* Settings change notificaton
+			*/
+			[id(35)] void OnSettingsChanged([in] BSTR eventDetails);
+
+			/**
+			* Slideshow start notification 
+			*/
+			[id(36)] void OnSlideShowStart([in] BSTR eventDetails);
+
+			/**
+			* Slideshow end notificaton
+			*/
+			[id(37)] void OnSlideShowStop([in] BSTR eventDetails);
+
+			/**
+			* End of P2P call 
+			*/
+			[id(39)] void OnStopCalling([in] BSTR eventDetails);
+
+			/**
+			* Avatar update notification
+			*/
+			[id(41)] void OnUpdateAvatar([in] BSTR eventDetails);
+
+			/**
+			* Camera format change notification
+			*/
+			[id(42)] void OnUpdateCameraInfo([in] BSTR eventDetails);
+
+			/**
+			* Conference participant list change notification
+			*/
+			[id(43)] void OnUpdateParticipantList([in] BSTR eventDetails);
+
+			/**
+			* Restrictions update notification
+			*/
+			[id(44)] void OnRestrictionsChanged([in] BSTR eventDetails);
+
+			/**
+			* Video matrix change notificaton
+			*/
+			[id(45)] void OnVideoMatrixChanged([in] BSTR eventDetails);
+
+			/**
+			* Call button pressed notification
+			*/
+			[id(46)] void OnOffHookPressed([in] BSTR eventDetails);
+
+			/**
+			* Hang up button pressed notification
+			*/
+			[id(47)] void OnHangUpPressed([in] BSTR eventDetails);
+
+			/**
+			* Off hookon external hardware device
+			*/
+			[id(48)] void OnJabraHookOffPressed();
+
+			/**
+			* Hang up on external hardware device
+			*/
+			[id(49)] void OnJabraHangUpPressed();
+
+			/**
+			* Command execution reply
+			* \param cmdName - command name
+			* \param allData - command reply in JSON format
+			*/
+			[id(50)] void OnXCommandExecution([in] BSTR cmdName, [in] BSTR allData);
+
+			/**
+			* Slidesho parameter change
+			* \param eventDetails - full notificatoin test in JSON.
+			*/
+			[id(51)] void OnSlideShowInfoUpdate([in] BSTR eventDetails);
+
+			/**
+			* Initialization start notification
+			*/
+			[id(52)] void OnStart();
+
+			/**
+			* Erro notification
+			* \param errorCode - integer error code
+			* \param errorMsg - error text
+			*/
+			[id(53)] void OnXError([in] LONG errorCode, [in] BSTR errorMsg);
+
+            /**
+            * Login confirmation
+            */
+            [id(54)] void OnXLogin();
+
+            /**
+            * Logon error notificaton
+            * \param errorCode - error code
+            * - 1 - answer on CheckUserLoginStatus_Method, if current CID is already authorized at TransportRouter
+            * - 2 - answer on CheckUserLoginStatus_Method, if current CID is not authorized at TransportRouter - can try to login
+            * - 3 - incorrect password or other problems with DB
+            * - 4 - client shouldn't show error to user (example: incorrect AutoLoginKey)
+            * - 5 - license restriction of online users reached, server cannot login you
+            * - 6 - user exist, but he is disabled to use this server
+            * - 7 - client should retry login after timeout (value in container or default), due to server busy or other server problems
+            * - 8 - user cannot login using this client app (should use other type of client app)
+            */
+            [id(55)] void OnXLoginError([in] LONG errorCode);
+
+            /**
+            * On incoming file transfer requiest received
+            */
+            [id(56)] HRESULT OnXFileRequestReceived([in] LONG fileId, [in] BSTR fileName, [in] BSTR fileCaption, [in] BSTR peerId);
+
+            /**
+            * On file status change whilte file transfer
+            * \param fileId - unique file id
+            * \param directionType
+            * - 1 - Download
+		    * - 2 - Upload
+            * \param fileStatus
+            * - 1 - StartError
+            * - 2 - Started
+            * - 3 - Complete
+            * - 4 - UndefinedError
+            * - 5 - Pending
+            */
+            [id(57)] HRESULT OnXFileStatusChange([in] LONG fileId, [in] LONG fileStatus, [in] LONG directionType);
+
+            /**
+            * On file send error
+            */
+            [id(58)] HRESULT OnXFileSendError([in] LONG error_code, [in] LONG fileId, [in] BSTR filePath, [in] BSTR fileCaption);
+            
+            /**
+            * File receiving progress notificaition
+            */
+            [id(59)] HRESULT OnXFileReceiveProgress([in] LONG percent, [in] LONG fileId, [in] BSTR fileName, [in] BSTR fileCaption);
+
+            /**
+            * File receiving complete notification
+            */
+            [id(60)] HRESULT OnXFileReceive([in] BSTR peerId, [in] LONG fileId, [in] BSTR fileName, BSTR fileCaption);
+
+            /**
+            * File sending complete notification
+            */
+            [id(61)] HRESULT OnXFileSend([in] LONG fileId, [in] BSTR filePath, [in] BSTR fileCaption);
+
+            /**
+            * On remote command receiving
+            * \param peerId - sender TrueConf ID
+            * \param command - commang string
+            */
+            [id(62)] HRESULT OnCommandReceived([in] BSTR peerId, [in] BSTR command);
+
+            /**
+            * Notification about video replacing picture send status change
+            * \param picture filename wihtout path, empty when not sending
+            */
+            [id(63)] void OnBroadcastPictureStateChanged([in] BSTR filename);
+
+            /**
+            * Call history change notification
+            * \param jsonCallHistory - string with call history in JSON format. Contains only calls later that in lastView parameter
+            */
+            [id(64)] void OnCallHistoryUpdated([in] BSTR jsonCallHistory);
+
+            /**
+            * Notification about outgoing add to address book command
+            * \param peerId - user's TrueConf ID
+            * \param peerDn - user's display name
+            */
+            [id(65)] void OnCmdAddToAbook([in] BSTR peerId, [in] BSTR peerDn);
+
+            /**
+            * Notification about outgoing add to address book's group command
+            * \param groupId - group ID
+            * \param peerId - user's TrueConf ID
+            */
+            [id(66)] void OnCmdAddToGroup([in] LONG groupId, [in] BSTR peerId);
+
+            /**
+            * Notification about outgoing ban command
+            * \param peerId - user's TrueConf ID
+            */
+            [id(67)] void OnCmdBlock([in] BSTR peerId);
+
+            /**
+            * Chat history clear notification
+            * \param chatId - chat ID
+            */
+            [id(68)] void OnCmdChatClear([in] BSTR chatId);
+
+            /**
+            * Create address book group outgoing notfication
+            * \param groupName - group name
+            */
+            [id(69)] void OnCmdCreateGroup([in] BSTR groupName);
+
+            /**
+            * Notification about outgoing remove from address book command
+            * \param peerId - user's TrueConf ID
+            */
+            [id(70)] void OnCmdRemoveFromAbook([in] BSTR peerId);
+
+            /**
+            * Notification about outgoing remove from address book's group command
+            * \param peerId - user's TrueConf ID
+            * \param groupId - group ID
+            */
+            [id(71)] void OnCmdRemoveFromGroup([in] LONG groupId, [in] BSTR peerId);
+
+            /**
+            * Notification about outgoing remove address book's group command
+            * \param groupId - group ID
+            */
+            [id(72)] void OnCmdRemoveGroup([in] LONG groupId);
+
+            /**
+            * Notification about outgoing address book's group rename command
+            * \param groupId - group ID
+            * \param groupName - new group name
+            */
+            [id(73)] void OnCmdRenameGroup([in] LONG groupId, [in] BSTR groupName);
+
+            /**
+            * Notification about outgoing user rename in address book command
+            * \param peerId - user's TrueConf ID
+            * \param peerDn - new user's display name
+            */
+            [id(74)] void OnCmdRenameInAbook([in] BSTR peerId, [in] BSTR peerDn);
+
+            /**
+            * Notification about outgoing unban command
+            * \param peerId - user's TrueConf ID
+            */
+            [id(75)] void OnCmdUnblock([in] BSTR peerId);
+
+            /**
+            * Outgoing notification about sucessful command sending
+            * \param peerId - user's TrueConf ID
+            * \param command - command string
+            */
+            [id(76)] void OnCommandSent([in] BSTR peerId, [in] BSTR command);
+
+            /**
+            * File accepted nofitication
+            * \param fileId - file ID
+            */
+            [id(77)] void OnFileAccepted([in] LONG fileId);
+
+            /**
+            * File sent to current conference nofitication
+            * \param fileId - file ID
+            * \param fileName - file Name
+            */
+            [id(78)] void OnFileConferenceSent([in] LONG fileId, [in] BSTR fileName);
+
+            /**
+            * File rejected nofitication
+            * \param fileId - file ID
+            */
+            [id(79)] void OnFileRejected([in] LONG fileId);
+
+            /**
+            * File sent to user nofitication
+            * \param fileId - file ID
+            * \param fileName - file Name
+            * \param peerId - user's TrueConf ID
+            */
+            [id(80)] void OnFileSent([in] LONG fileId, [in] BSTR fileName, [in] BSTR peerId);
+
+            /**
+            * File transfer availability notificaton
+            * \param available - true if file transfer is available, false otherwise
+            */
+            [id(81)] void OnFileTransferAvailable([in] VARIANT_BOOL available);
+
+            /**
+            * User group change notification
+            * \param jsonGroupList - string with detailed group infornation,including members, in JSON format
+            */
+            [id(82)] void OnGroupsUpdate([in] BSTR jsonGroupList);
+
+            /**
+            * Incoming chat notificaton
+            * \param peerId - sender's TrueConf ID
+            * \param peerDn - sender's display name
+            * \param message - message
+            * \param time - вmessage time in unix-time format
+            */
+            [id(83)] void OnIncomingChatMessage([in] BSTR peerId, [in] BSTR peerDn, [in] BSTR message, [in] ULONGLONG time);
+
+            /**
+            * Incoming group chat notificaton
+            * \param peerId - sender's TrueConf ID
+            * \param peerDn - sender's display name
+            * \param message - message text
+            * \param time - вmessage time in unix-time format
+            */
+            [id(84)] void OnIncomingGroupChatMessage([in] BSTR peerId, [in] BSTR peerDn, [in] BSTR message, [in] ULONGLONG time);
+
+            /**
+            * Message sent to group chat notification
+            * \param message - message text
+            */
+            [id(85)] void OnGroupChatMessageSent([in] BSTR message);
+
+            /**
+            * Message sent to user notification
+            * \param peerId - user's TrueConf ID
+            * \param message - message text
+            */
+            [id(86)] void OnChatMessageSent([in] BSTR peerId, [in] BSTR message);
+
+            /**
+            * Microphone test progress notification
+            * \param started - true when test started, false when ended
+            */
+            [id(87)] void OnTestAudioCapturerStateUpdated([in] VARIANT_BOOL started);
+
+            /**
+            * Microphone test volume level notification
+            * \param lvl - volume level
+            */
+            [id(88)] void OnAudioCapturerRmsLevelUpdated([in] DOUBLE lvl);
+
+            /**
+            * In-call DTMF tone sent notificaion
+            * \param symbol - sent DTMF tone
+            */
+            [id(89)] void OnToneDial([in] BSTR symbol);
+
+};
+	[
+		uuid(27EF4BA2-4500-4839-B88A-F2F4744FE56A),
+		control
+	]
+	coclass TrueConfCallX
+	{
+		[default] interface ITrueConfCallX;
+		[default, source] dispinterface _ITrueConfCallXEvents;
+	};
+};
+
