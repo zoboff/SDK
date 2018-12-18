@@ -34,8 +34,8 @@ type
     procedure Check;
   public
     { Public declarations }
-    function ShowDialog(const ARegKey: string; ACallX: TTrueConfCallX): boolean;
-    function ApplySettings(const ARegKey: string; ACallX: TTrueConfCallX): boolean;
+    class function ShowDialog(AOwner: TComponent; const ARegKey: string; ACallX: TTrueConfCallX): boolean;
+    class function ApplySettings(AOwner: TComponent; const ARegKey: string; ACallX: TTrueConfCallX): boolean;
   end;
 
 implementation
@@ -46,24 +46,30 @@ uses Registry;
 
 { TfrmHardware }
 
-function TfrmHardware.ApplySettings(const ARegKey: string; ACallX: TTrueConfCallX): boolean;
+class function TfrmHardware.ApplySettings(AOwner: TComponent; const ARegKey: string;
+  ACallX: TTrueConfCallX): boolean;
 begin
   Result := False;
 
-  FCallX := ACallX;
-  FRegKey := ARegKey;
-
-  Check; { check }
-
-  with TRegistry.Create do
+  with Create(AOwner) do
   try
-    RootKey := HKEY_CURRENT_USER;
-    Result := OpenKey(ARegKey, False);
-    if Result then
-    begin
-      FCallX.Camera := ReadString(sREGKEY_CAMERA);
-      FCallX.Speaker := ReadString(sREGKEY_SPEAKER);
-      FCallX.Microphone := ReadString(sREGKEY_MICRPHONE);
+    FCallX := ACallX;
+    FRegKey := ARegKey;
+
+    Check; { check }
+
+    with TRegistry.Create do
+    try
+      RootKey := HKEY_CURRENT_USER;
+      Result := OpenKey(ARegKey, False);
+      if Result then
+      begin
+        FCallX.Camera := ReadString(sREGKEY_CAMERA);
+        FCallX.Speaker := ReadString(sREGKEY_SPEAKER);
+        FCallX.Microphone := ReadString(sREGKEY_MICRPHONE);
+      end;
+    finally
+      Free;
     end;
   finally
     Free;
@@ -77,35 +83,40 @@ begin
 
 end;
 
-function TfrmHardware.ShowDialog(const ARegKey: string;
+class function TfrmHardware.ShowDialog(AOwner: TComponent; const ARegKey: string;
   ACallX: TTrueConfCallX): boolean;
 begin
   Result := False;
 
-  FCallX := ACallX;
-  FRegKey := ARegKey;
+  with Create(AOwner) do
+  try
+    FCallX := ACallX;
+    FRegKey := ARegKey;
 
-  Check; { check }
+    Check; { check }
 
-  { Read Hardware List}
-  GetHardwareList;
-  { Show }
-  Result := ShowModal = mrOk;
+    { Read Hardware List}
+    GetHardwareList;
+    { Show }
+    Result := (ShowModal = mrOk);
 
-  if Result then
-  begin
-    with TRegistry.Create do
-    try
-      RootKey := HKEY_CURRENT_USER;
-      if OpenKey(ARegKey, True) then
-      begin
-        WriteString(sREGKEY_CAMERA, comboCamera.Text);
-        WriteString(sREGKEY_SPEAKER, comboSpeaker.Text);
-        WriteString(sREGKEY_MICRPHONE, comboMicrophone.Text);
+    if Result then
+    begin
+      with TRegistry.Create do
+      try
+        RootKey := HKEY_CURRENT_USER;
+        if OpenKey(ARegKey, True) then
+        begin
+          WriteString(sREGKEY_CAMERA, comboCamera.Text);
+          WriteString(sREGKEY_SPEAKER, comboSpeaker.Text);
+          WriteString(sREGKEY_MICRPHONE, comboMicrophone.Text);
+        end;
+      finally
+        Free;
       end;
-    finally
-      Free;
     end;
+  finally
+    Free;
   end;
 end;
 

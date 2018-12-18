@@ -13,6 +13,7 @@ object Form1: TForm1
   OldCreateOrder = False
   Position = poScreenCenter
   Scaled = False
+  OnClose = FormClose
   DesignSize = (
     689
     550)

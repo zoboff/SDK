@@ -20,6 +20,7 @@ type
     procedure TrueConfCallX1XLogin(Sender: TObject);
     procedure btnHardwareClick(Sender: TObject);
     procedure TrueConfCallX1XLoginError(ASender: TObject; errorCode: Integer);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
   public
@@ -37,15 +38,15 @@ uses HardwareForm, LoginForm, ServerForm;
 
 procedure TForm1.btnHardwareClick(Sender: TObject);
 begin
-  with TfrmHardware.Create(self) do
-  try
-    if ShowDialog(Application.Title, TrueConfCallX1) then
-    begin
+  if TfrmHardware.ShowDialog(self, Application.Title, TrueConfCallX1) then
+  begin
 
-    end;
-  finally
-    Free;
   end;
+end;
+
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+ // Action := caNone;
 end;
 
 procedure TForm1.TrueConfCallX1InviteReceived(ASender: TObject;
@@ -72,14 +73,9 @@ end;
 procedure TForm1.TrueConfCallX1XAfterStart(Sender: TObject);
 var sServer: string;
 begin
-  with TfrmHardware.Create(self) do
-  try
-    if ApplySettings(Application.Title, TrueConfCallX1) then
-    begin
+  if TfrmHardware.ApplySettings(self, Application.Title, TrueConfCallX1) then
+  begin
 
-    end;
-  finally
-    Free;
   end;
 
   //TrueConfCallX1.XSetCameraByIndex(0); // use your "first" camera
@@ -87,8 +83,10 @@ begin
   { Server }
   if GetServerName(sServer) then
     TrueConfCallX1.connectToServer(sServer)
-  else
+  else begin
+    ShowMessage('Server not found');
     Application.Terminate;
+  end;
 end;
 
 procedure TForm1.TrueConfCallX1XLogin(Sender: TObject);
